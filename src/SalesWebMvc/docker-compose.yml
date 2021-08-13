@@ -1,11 +1,18 @@
 version: '3'
 services:
   mysqlsrv:
-    image: mysql:latest
+    image: mysql/mysql-server:latest
     environment:
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'root'
       MYSQL_ROOT_PASSWORD: 'admin'
-      MYSQL_DATABASE: 'saleswebmvc'
+      MYSQL_DATABASE: 'db'
+      MYSQL_ROOT_HOST: '0.0.0.0'
     ports:
       - '3306:3306'
+    expose:
+      - '3306'
     volumes:
       - ./_data:/var/lib/mysql
+volumes:
+  db:
