@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SalesWebMvc.Services;
+using SalesWebMvc.Services.Exceptions;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using System;
@@ -97,6 +98,29 @@ namespace SalesWebMvc.Controllers
             var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if (id != seller.Id) return BadRequest();
+
+            try
+            {
+
+                _sellerService.Update(seller);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
