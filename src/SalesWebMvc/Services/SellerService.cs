@@ -4,6 +4,7 @@ using SalesWebMvc.Models;
 using SalesWebMvc.Data;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Services.Exceptions;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Services
 {
@@ -16,25 +17,26 @@ namespace SalesWebMvc.Services
             _context = context;
         }
 
-        public List<Seller> FindAll()
+        async public Task<List<Seller>> FindAllAsync()
         {
-            return _context.Seller.ToList();
+            return await _context.Seller.ToListAsync();
         }
 
-        public void Insert(Seller seller)
+        async public Task InsertAsync(Seller seller)
         {
             _context.Add(seller);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public Seller FindById(int id)
+        async public Task<Seller> FindByIdAsync(int id)
         {
-            return _context.Seller.Include(x => x.Department).FirstOrDefault(x => x.Id == id);
+            return await _context.Seller.Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public void Update(Seller seller)
+        async public Task UpdateAsync(Seller seller)
         {
-            if (!_context.Seller.Any(x => x.Id == seller.Id))
+            bool hasAny = await _context.Seller.AnyAsync(x => x.Id == seller.Id);
+            if (!hasAny)
             {
                 throw new NotFoundException("Id not found");
             }
@@ -42,7 +44,8 @@ namespace SalesWebMvc.Services
             try
             {
                 _context.Update(seller);
-                _context.SaveChanges();
+
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -50,12 +53,13 @@ namespace SalesWebMvc.Services
             }
         }
 
-        public void Remove(int id)
+        async public Task RemoveAsync(int id)
         {
-            var seller = _context.Seller.Find(id);
+            var seller = await _context.Seller.FindAsync(id);
 
             _context.Seller.Remove(seller);
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
         }
     }
 }
