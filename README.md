@@ -1,5 +1,7 @@
 # 🚀 Sales Web MVC
 
+Created by following the course by Nelio Alves. [Link here](https://www.udemy.com/course/programacao-orientada-a-objetos-csharp/)
+
 by Luan Panno
 
 ## ⚙️ Stack
