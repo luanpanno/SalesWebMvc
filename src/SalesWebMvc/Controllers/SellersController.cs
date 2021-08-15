@@ -5,6 +5,7 @@ using SalesWebMvc.Services.Exceptions;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using System;
+using System.Diagnostics;
 
 namespace SalesWebMvc.Controllers
 {
@@ -26,6 +27,11 @@ namespace SalesWebMvc.Controllers
             var seller = _sellerService.FindById(id.Value);
 
             return seller;
+        }
+
+        private RedirectToActionResult RedirectToError(string message = "Id not found")
+        {
+            return RedirectToAction(nameof(Error), new { message });
         }
 
         public IActionResult Index()
@@ -58,7 +64,7 @@ namespace SalesWebMvc.Controllers
 
             if (seller == null)
             {
-                return NotFound();
+                return this.RedirectToError();
             }
 
             return View(seller);
@@ -79,7 +85,7 @@ namespace SalesWebMvc.Controllers
 
             if (seller == null)
             {
-                return NotFound();
+                return this.RedirectToError();
             }
 
             return View(seller);
@@ -91,7 +97,7 @@ namespace SalesWebMvc.Controllers
 
             if (seller == null)
             {
-                return NotFound();
+                return this.RedirectToError();
             }
 
             var departments = _departmentService.FindAll();
@@ -104,7 +110,7 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
-            if (id != seller.Id) return BadRequest();
+            if (id != seller.Id) return this.RedirectToError();
 
             try
             {
@@ -113,20 +119,22 @@ namespace SalesWebMvc.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException)
+            catch (ApplicationException e)
             {
-                return NotFound();
-            }
-            catch (DbConcurrencyException)
-            {
-                return BadRequest();
+                return this.RedirectToError(e.Message);
             }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(string message)
         {
-            return View("Error!");
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
         }
 
     }
