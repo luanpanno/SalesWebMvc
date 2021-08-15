@@ -9,14 +9,15 @@
 <header>
     <hr />
 
-    <h3>Create Seller</h3>
+    <h3>Edit Seller</h3>
 
     <hr />
 </header>
 
 <main>
-    <form asp-action="Create">
+    <form asp-action="Edit">
         <div class="col-md-4">
+            <input type="hidden" asp-for="Seller.Id" />
             <div class="form-group">
                 <label asp-for="Seller.Name" class="control-label"></label>
                 <input asp-for="Seller.Name" class="form-control" />
@@ -38,7 +39,8 @@
                 <select asp-for="Seller.DepartmentId" asp-items="@(new SelectList(Model.Departments, "Id", "Name"))"
                     class="form-control"></select>
             </div>
-
+            <div class="form-group">
+            </div>
         </div>
         <div class="d-flex align-items-center justify-content-end">
             <a asp-action="Index" class="btn btn-secondary mr-2">Back</a>

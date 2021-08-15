@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SalesWebMvc.Models;
 using SalesWebMvc.Data;
 using Microsoft.EntityFrameworkCore;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Services
 {
@@ -29,6 +30,24 @@ namespace SalesWebMvc.Services
         public Seller FindById(int id)
         {
             return _context.Seller.Include(x => x.Department).FirstOrDefault(x => x.Id == id);
+        }
+
+        public void Update(Seller seller)
+        {
+            if (!_context.Seller.Any(x => x.Id == seller.Id))
+            {
+                throw new NotFoundException("Id not found");
+            }
+
+            try
+            {
+                _context.Update(seller);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
         }
 
         public void Remove(int id)

@@ -74,7 +74,6 @@ namespace SalesWebMvc.Controllers
 
         public IActionResult Details(int? id)
         {
-
             var seller = GetSellerById(id);
 
             if (seller == null)
@@ -83,6 +82,21 @@ namespace SalesWebMvc.Controllers
             }
 
             return View(seller);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            var seller = GetSellerById(id);
+
+            if (seller == null)
+            {
+                return NotFound();
+            }
+
+            var departments = _departmentService.FindAll();
+            var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+
+            return View(viewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

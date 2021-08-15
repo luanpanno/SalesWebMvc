@@ -6,8 +6,15 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<div>
+<header>
     <hr />
+
+    <h3>Details Seller</h3>
+
+    <hr />
+</header>
+
+<main>
     <dl class="dl-horizontal">
         <dt>@Html.DisplayNameFor(model => model.Name)</dt>
         <dd>@Html.DisplayFor(model => model.Name)</dd>
@@ -21,8 +28,8 @@
         <dd>@Html.DisplayFor(model => model.Department.Name)</dd>
     </dl>
 
-    <form asp-action="Delete">
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    <div class="d-flex align-items-center justify-content-end">
+        <a asp-action="Index" class="btn btn-secondary mr-2">Back</a>
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-    </form>
-</div>
+    </div>
+</main>

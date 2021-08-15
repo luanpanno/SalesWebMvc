@@ -4,11 +4,11 @@
     ViewData["Title"] = "Sellers";
 }
 
-<h2>@ViewData["Title"]</h2>
 
-<p>
-    <a asp-action="Create">Create</a>
-</p>
+<header class="mb-3 row d-flex align-items-center justify-content-between">
+    <h2>@ViewData["Title"]</h2>
+    <a asp-action="Create" class="btn btn-secondary">Create</a>
+</header>
 
 <table class="table table-striped table-hover">
     <thead>
