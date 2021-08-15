@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections.Generic;
 using SalesWebMvc.Models;
 using SalesWebMvc.Data;
@@ -55,11 +54,18 @@ namespace SalesWebMvc.Services
 
         async public Task RemoveAsync(int id)
         {
-            var seller = await _context.Seller.FindAsync(id);
+            try
+            {
+                var seller = await _context.Seller.FindAsync(id);
 
-            _context.Seller.Remove(seller);
+                _context.Seller.Remove(seller);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
         }
     }
 }
